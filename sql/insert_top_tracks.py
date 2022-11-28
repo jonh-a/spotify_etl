@@ -17,3 +17,17 @@ insert_chart = """INSERT INTO charts (
     %s
 )
 """
+
+insert_track = """INSERT INTO tracks (
+    id,
+    track_id,
+    name,
+    artists,
+    album,
+    popularity,
+    duration_ms,
+    position,
+    chart_id
+) VALUES (
+    %s, %s, %s, %s, %s, %s, %s, %s, %s
+)"""
