@@ -1,5 +1,5 @@
 import psycopg2
-from dags.util.authorize_spotify import authorize_spotify
+from dags.util.authenticate_spotify import authenticate_spotify
 from dags.scripts.get_top_songs import get_top_songs
 import sql.create_tables
 from dotenv import load_dotenv
@@ -34,7 +34,7 @@ def main():
     conn = _connect_to_db()
     _create_tables(conn)
 
-    auth_token = authorize_spotify()
+    auth_token = authenticate_spotify()
     top_songs = get_top_songs(auth_token, conn)
     conn.close()
 

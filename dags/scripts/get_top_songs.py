@@ -1,7 +1,6 @@
 import requests
 import datetime
 from uuid import uuid4
-import psycopg2
 import sql.create_tables
 import sql.insert_top_tracks
 

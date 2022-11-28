@@ -12,7 +12,7 @@ def _encode_auth_header(client_id, client_secret):
     return base64_string
 
 
-def authorize_spotify():
+def authenticate_spotify():
     load_dotenv()
     client_id = os.getenv("SPOTIFY_CLIENT_ID")
     client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
