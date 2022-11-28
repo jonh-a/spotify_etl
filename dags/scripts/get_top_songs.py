@@ -1,9 +1,12 @@
 import requests
 import datetime
 from uuid import uuid4
+import psycopg2
+import sql.create_tables
+import sql.insert_top_tracks
 
 
-def _fetch_tracks(playlist, playlist_id, auth_token, date, job_id, playlist_job_id):
+def _fetch_tracks(playlist, playlist_id, auth_token, date, job_id, chart_id):
     resp = requests.get(
         f"https://api.spotify.com/v1/playlists/{playlist_id}",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -28,7 +31,7 @@ def _fetch_tracks(playlist, playlist_id, auth_token, date, job_id, playlist_job_
                     "playlist": playlist,
                     "date": date,
                     "job_id": job_id,
-                    "playlist_job_id": playlist_job_id,
+                    "chart_id": chart_id,
                 }
             )
 
@@ -39,14 +42,32 @@ def _fetch_tracks(playlist, playlist_id, auth_token, date, job_id, playlist_job_
         return
 
 
-def get_top_songs(auth_token):
+def _insert_job(date, job_id, cur, conn):
+    cur.execute(sql.insert_top_tracks.insert_job, (date, job_id))
+    conn.commit()
+
+
+def _insert_chart(job_id, chart_id, playlist, cur, conn):
+    cur.execute(sql.insert_top_tracks.insert_chart, (chart_id, job_id, playlist))
+    conn.commit()
+
+
+def get_top_songs(auth_token, conn):
+    cur = conn.cursor()
+
     playlists = {"us": "37i9dQZEVXbLRQDuF5jeBp", "global": "37i9dQZEVXbMDoHDwVN2tF"}
     today = str(datetime.datetime.utcnow()).split(" ")[0]
-    job_id = uuid4()
+    job_id = str(uuid4())
+
+    _insert_job(today, job_id, cur, conn)
 
     charts = []
 
     for playlist in playlists.keys():
+        chart_id = str(uuid4())
+
+        _insert_chart(job_id, chart_id, playlist, cur, conn)
+
         charts.append(
             _fetch_tracks(
                 playlist=playlist,
@@ -54,7 +75,7 @@ def get_top_songs(auth_token):
                 auth_token=auth_token,
                 date=today,
                 job_id=job_id,
-                playlist_job_id=uuid4(),
+                chart_id=chart_id,
             )
         )
 
