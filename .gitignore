@@ -1,0 +1,8 @@
+# created by virtualenv automatically
+lib/
+bin/
+.env
+.Python
+.idea
+generated
+include
