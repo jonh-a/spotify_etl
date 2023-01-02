@@ -37,9 +37,18 @@ Edit your `~/airflow/airflow.cfg` and set the `dags_folder` variable to the abso
 ## Running the Service
 Start Airflow with `airflow standalone` or by running `airflow webserver --port 8080` and `airflow scheduler`.
 
-Running `airflow standalone` will create an admin account for you. You can login with the credentials provided in the terminal.
+Running `airflow standalone` will create an admin account for you. 
+
+Access the Airflow UI at `http://localhost:8080`.
+
+You can login with the credentials provided in the terminal.
 
 ## Job Summary
+Find the `spotify_dag` in the DAGs menu from the Airflow UI.
+
+Trigger the DAG manually by clicking the "play" button in the top right.
+<img width="1490" alt="image" src="https://user-images.githubusercontent.com/69375243/210269546-ca80bf89-b6aa-4956-bf8d-762171a9a617.png">
+
 Three tables are created, `jobs`, `charts`, and `tracks`.
 
 Each time the Airflow DAG is run, an entry is added to the `jobs` table.
